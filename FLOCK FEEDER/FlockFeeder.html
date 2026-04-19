@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FlockFeeder — Precision poultry feeding, engineered for the modern coop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F2EFE8;
+    --bg-alt: #EBE7DD;
+    --ink: #141311;
+    --ink-soft: #2b2a27;
+    --muted: #6b6762;
+    --line: #d3cec1;
+    --red: #B8372A;     /* product base red */
+    --red-deep: #8f2a1f;
+    --metal: #9aa0a4;   /* stainless hint */
+    --glass: rgba(30,28,24,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); font-family: 'Inter Tight', -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+  body { overflow-x: hidden; }
+  .mono { font-family: 'JetBrains Mono', monospace; letter-spacing: 0.02em; font-size: 11px; text-transform: uppercase; }
+  .serif { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+
+  /* ---------- NAV ---------- */
+  nav.top {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px;
+    background: rgba(242,239,232,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.01em; }
+  .brand-mark { width: 22px; height: 22px; position: relative; }
+  .brand-mark::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--red);
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  }
+  .brand-mark::after {
+    content: ''; position: absolute; inset: 6px;
+    background: var(--bg);
+    border-radius: 50%;
+  }
+  .nav-links { display: flex; gap: 28px; font-size: 14px; color: var(--ink-soft); }
+  .nav-links a:hover { color: var(--red); }
+  .nav-cta {
+    padding: 9px 16px;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 999px;
+    font-size: 13px; font-weight: 500;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--red); }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 40px;
+    padding: 80px 40px 120px;
+    max-width: 1440px;
+    margin: 0 auto;
+    align-items: end;
+    position: relative;
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  h1.hero-title {
+    font-size: clamp(56px, 7.2vw, 108px);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  h1.hero-title em { color: var(--red); font-style: normal; }
+  h1.hero-title .italic { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; letter-spacing: -0.02em; }
+
+  .hero-sub {
+    margin-top: 28px;
+    font-size: 18px; line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 440px;
+  }
+  .hero-cta-row { margin-top: 40px; display: flex; gap: 14px; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px;
+    border-radius: 999px;
+    font-size: 14px; font-weight: 500;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+  .btn.primary { background: var(--ink); color: var(--bg); }
+  .btn.primary:hover { background: var(--red); }
+  .btn.ghost { color: var(--ink); border-color: var(--line); background: transparent; }
+  .btn.ghost:hover { border-color: var(--ink); }
+  .btn .arrow { transition: transform 0.2s; }
+  .btn:hover .arrow { transform: translateX(3px); }
+
+  .hero-meta {
+    display: flex; gap: 40px; margin-top: 56px;
+    padding-top: 28px; border-top: 1px solid var(--line);
+    max-width: 520px;
+  }
+  .hero-meta .stat .num {
+    font-size: 36px; font-weight: 500; letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+  .hero-meta .stat .lbl {
+    color: var(--muted); font-size: 13px; margin-top: 4px;
+  }
+
+  /* ---------- HERO ILLUSTRATION (SVG feeder) ---------- */
+  .hero-visual {
+    position: relative;
+    aspect-ratio: 1/1.15;
+    max-width: 560px;
+    justify-self: end;
+    width: 100%;
+  }
+  .hero-visual .bg-block {
+    position: absolute; inset: 0;
+    background: var(--bg-alt);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .hero-visual .bg-block::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.4;
+  }
+  .hero-visual .product-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: contain;
+    padding: 28px;
+    filter: drop-shadow(0 24px 40px rgba(20,19,17,0.18));
+    z-index: 1;
+  }
+
+  .hero-tag-tl, .hero-tag-br {
+    position: absolute;
+    color: var(--muted);
+    z-index: 2;
+  }
+  .hero-tag-tl { top: 20px; left: 20px; }
+  .hero-tag-br { bottom: 20px; right: 20px; text-align: right; }
+
+  /* Floating annotation chips on hero */
+  .chip {
+    position: absolute;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 6px 10px;
+    border-radius: 4px;
+    z-index: 3;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .chip .chip-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--red);
+  }
+  .chip-1 { top: 18%; left: -6%; }
+  .chip-2 { top: 52%; right: -4%; }
+  .chip-3 { bottom: 14%; left: 8%; }
+
+  /* ---------- MARQUEE BAND ---------- */
+  .band {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 22px 0;
+    overflow: hidden;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .band-track {
+    display: flex; gap: 48px;
+    animation: scroll 45s linear infinite;
+    white-space: nowrap;
+    width: max-content;
+  }
+  .band-item { display: flex; align-items: center; gap: 14px; font-size: 15px; }
+  .band-item .glyph { color: var(--red); }
+  @keyframes scroll { to { transform: translateX(-50%); } }
+
+  /* ---------- SECTIONS ---------- */
+  section { padding: 120px 40px; max-width: 1440px; margin: 0 auto; }
+  .section-head {
+    display: grid; grid-template-columns: 1fr 2fr;
+    gap: 40px;
+    margin-bottom: 72px;
+    align-items: end;
+  }
+  .section-head .label { color: var(--muted); }
+  .section-head h2 {
+    font-size: clamp(38px, 4.5vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-weight: 500;
+  }
+  .section-head h2 em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--red); }
+
+  /* ---------- PROBLEM / OLD VS NEW ---------- */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-alt);
+  }
+  .problem-card {
+    padding: 56px 48px;
+    position: relative;
+    min-height: 460px;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+  }
+  .problem-card + .problem-card { border-left: 1px solid var(--line); }
+  .problem-card.old { background: var(--bg-alt); }
+  .problem-card.new { background: var(--ink); color: var(--bg); }
+  .problem-card .tag {
+    display: inline-block; padding: 4px 10px;
+    background: transparent; border: 1px solid currentColor; border-radius: 999px;
+    opacity: 0.6;
+    width: fit-content;
+  }
+  .problem-card h3 {
+    margin-top: 28px;
+    font-size: 40px; letter-spacing: -0.02em; font-weight: 500; line-height: 1.05;
+  }
+  .problem-card ul {
+    list-style: none; margin-top: 28px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .problem-card li {
+    display: flex; gap: 14px; align-items: flex-start;
+    font-size: 16px; line-height: 1.5;
+  }
+  .problem-card li::before {
+    content: '—'; opacity: 0.6; flex-shrink: 0; margin-top: 2px;
+  }
+  .problem-card.new li::before { color: var(--red); opacity: 1; }
+  .problem-card .stat-big {
+    margin-top: 40px;
+    font-size: 96px; letter-spacing: -0.04em; line-height: 0.9; font-weight: 400;
+    font-family: 'Instrument Serif', serif;
+  }
+  .problem-card.new .stat-big { color: var(--red); }
+  .problem-card .stat-lbl { font-size: 13px; opacity: 0.6; margin-top: 8px; }
+
+  /* ---------- ANATOMY / EXPLODED ---------- */
+  .anatomy {
+    position: relative;
+    background: var(--bg-alt);
+    border-radius: 4px;
+    border: 1px solid var(--line);
+    padding: 60px;
+    min-height: 780px;
+    overflow: hidden;
+  }
+  .anatomy::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .anatomy-svg-wrap {
+    position: relative;
+    height: 680px;
+    display: flex; justify-content: center;
+    z-index: 1;
+  }
+  .anatomy-svg-wrap .product-img {
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 24px 40px rgba(20,19,17,0.18));
+  }
+  .anatomy-label {
+    position: absolute;
+    display: flex; align-items: center; gap: 12px;
+    color: var(--ink-soft);
+    font-size: 13px;
+  }
+  .anatomy-label .ln { height: 1px; background: var(--ink); }
+  .anatomy-label .no { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); }
+  .anatomy-label .nm { font-weight: 500; color: var(--ink); }
+  .anatomy-label .sub { color: var(--muted); font-size: 12px; }
+
+  /* ---------- FEATURE GRID ---------- */
+  .feat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .feat {
+    background: var(--bg);
+    padding: 40px 32px;
+    min-height: 320px;
+    display: flex; flex-direction: column;
+    transition: background 0.25s;
+  }
+  .feat:hover { background: var(--bg-alt); }
+  .feat .feat-ico {
+    width: 56px; height: 56px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 32px;
+    color: var(--red);
+  }
+  .feat h4 {
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .feat p { color: var(--muted); font-size: 14px; line-height: 1.55; }
+  .feat .feat-num { margin-top: auto; padding-top: 24px; color: var(--muted); }
+
+  /* ---------- SPEC SHEET ---------- */
+  .spec-wrap {
+    display: grid; grid-template-columns: 1.2fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+  .spec-visual {
+    position: relative;
+    aspect-ratio: 4/5;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+    padding: 40px;
+  }
+  .spec-visual svg { width: 100%; height: 100%; }
+  .spec-visual .cap { position: absolute; bottom: 24px; left: 24px; color: rgba(255,255,255,0.5); }
+
+  table.specs {
+    width: 100%; border-collapse: collapse;
+  }
+  table.specs tr { border-bottom: 1px solid var(--line); }
+  table.specs tr:first-child { border-top: 1px solid var(--line); }
+  table.specs td {
+    padding: 18px 0;
+    vertical-align: top;
+    font-size: 15px;
+  }
+  table.specs td.k { color: var(--muted); width: 42%; }
+  table.specs td.v { color: var(--ink); font-weight: 500; }
+  table.specs .note { color: var(--muted); font-weight: 400; font-size: 13px; margin-top: 4px; }
+
+  /* ---------- TESTIMONIAL ---------- */
+  .quote-block {
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 4px;
+    padding: 96px 72px;
+    position: relative;
+    overflow: hidden;
+  }
+  .quote-block .q-bg {
+    position: absolute;
+    right: -40px; bottom: -160px;
+    font-family: 'Instrument Serif', serif;
+    font-size: 560px; line-height: 1; color: var(--red);
+    opacity: 0.25;
+    pointer-events: none;
+    font-style: italic;
+  }
+  .quote-block blockquote {
+    font-size: clamp(28px, 3.5vw, 48px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    max-width: 900px;
+    position: relative; z-index: 1;
+  }
+  .quote-block blockquote em { color: var(--red); font-style: normal; }
+  .quote-meta {
+    margin-top: 48px;
+    display: flex; align-items: center; gap: 16px;
+    position: relative; z-index: 1;
+  }
+  .avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--red);
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar::after {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(-45deg, transparent 0 6px, rgba(0,0,0,0.15) 6px 7px);
+  }
+  .quote-meta .name { font-weight: 500; }
+  .quote-meta .role { color: rgba(255,255,255,0.5); font-size: 13px; margin-top: 2px; }
+
+  /* ---------- CTA ---------- */
+  .cta {
+    text-align: center;
+    padding: 140px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .cta h2 {
+    font-size: clamp(56px, 7vw, 112px);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    font-weight: 500;
+  }
+  .cta h2 em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--red); }
+  .cta p { margin-top: 24px; color: var(--ink-soft); font-size: 18px; max-width: 500px; margin-left: auto; margin-right: auto; }
+  .cta .cta-row { margin-top: 48px; display: inline-flex; gap: 12px; }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 60px 40px 40px;
+    max-width: 1440px; margin: 0 auto;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 72px;
+  }
+  .footer-grid h5 {
+    font-size: 13px; color: var(--muted); font-weight: 500;
+    margin-bottom: 18px; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .footer-grid ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-grid li a { font-size: 14px; color: var(--ink-soft); }
+  .footer-grid li a:hover { color: var(--red); }
+  .footer-grid .pitch { font-size: 16px; color: var(--ink-soft); max-width: 360px; line-height: 1.5; margin-top: 12px; }
+  .footer-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 32px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 12px;
+  }
+  .huge-logo {
+    font-size: clamp(120px, 20vw, 300px);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    font-weight: 500;
+    margin: 40px 0 60px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .huge-logo em { color: var(--red); font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 900px) {
+    nav.top { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 56px 20px 80px; }
+    .hero-visual { max-width: 100%; }
+    section { padding: 80px 20px; }
+    .section-head { grid-template-columns: 1fr; gap: 16px; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .problem-card + .problem-card { border-left: 0; border-top: 1px solid var(--line); }
+    .feat-grid { grid-template-columns: 1fr; }
+    .spec-wrap { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .quote-block { padding: 60px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top">
+  <a href="#" class="brand">
+    <span class="brand-mark"></span>
+    <span>FlockFeeder</span>
+  </a>
+  <div class="nav-links">
+    <a href="#how">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#specs">Specs</a>
+    <a href="#story">Story</a>
+  </div>
+  <a href="#order" class="nav-cta">Request a unit →</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div>
+    <div class="eyebrow mono"><span class="dot"></span> Model 01 — shipping Q2 2026</div>
+    <h1 class="hero-title">
+      Feed the flock.<br>
+      <span class="italic">Never</span> <em>the floor.</em>
+    </h1>
+    <p class="hero-sub">
+      FlockFeeder is a precision poultry feeder with a transparent hopper,
+      stainless trays, and a compression-spring dosing column —
+      engineered to end feed waste, contamination, and second trips to the coop.
+    </p>
+    <div class="hero-cta-row">
+      <a href="#order" class="btn primary">
+        Pre-order Model 01 <span class="arrow">→</span>
+      </a>
+      <a href="#how" class="btn ghost">See how it works</a>
+    </div>
+    <div class="hero-meta">
+      <div class="stat">
+        <div class="num">−38%</div>
+        <div class="lbl">Feed waste<br>vs. hanging feeders</div>
+      </div>
+      <div class="stat">
+        <div class="num">12kg</div>
+        <div class="lbl">Hopper capacity<br>≈ 5 day supply</div>
+      </div>
+      <div class="stat">
+        <div class="num">6</div>
+        <div class="lbl">Simultaneous<br>feeding stations</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="bg-block"></div>
+
+    <div class="chip mono chip-1"><span class="chip-dot"></span> Hinged lid</div>
+    <div class="chip mono chip-2"><span class="chip-dot"></span> Transparent hopper</div>
+    <div class="chip mono chip-3"><span class="chip-dot"></span> 10 stainless bowls</div>
+
+    <div class="hero-tag-tl mono">Model 01 / rev. 4</div>
+    <div class="hero-tag-br mono">scale 1:6<br>all dims mm</div>
+
+    <!-- Feeder product image -->
+    <img class="product-img" src="assets/flockfeeder.png" alt="FlockFeeder Model 01 — transparent hopper poultry feeder with stainless steel feeding bowls and red base" />
+  </div>
+</header>
+
+<!-- BAND -->
+<div class="band" aria-hidden="true">
+  <div class="band-track">
+    <!-- loop 2x for seamless scroll -->
+    <div class="band-item"><span class="glyph">◆</span> Less waste</div>
+    <div class="band-item"><span class="glyph">◆</span> Cleaner coop</div>
+    <div class="band-item"><span class="glyph">◆</span> Smarter dosing</div>
+    <div class="band-item"><span class="glyph">◆</span> Happier birds</div>
+    <div class="band-item"><span class="glyph">◆</span> Fewer refills</div>
+    <div class="band-item"><span class="glyph">◆</span> Rodent resistant</div>
+    <div class="band-item"><span class="glyph">◆</span> Stainless, not plastic</div>
+    <div class="band-item"><span class="glyph">◆</span> Dishwasher-safe trays</div>
+    <div class="band-item"><span class="glyph">◆</span> Less waste</div>
+    <div class="band-item"><span class="glyph">◆</span> Cleaner coop</div>
+    <div class="band-item"><span class="glyph">◆</span> Smarter dosing</div>
+    <div class="band-item"><span class="glyph">◆</span> Happier birds</div>
+    <div class="band-item"><span class="glyph">◆</span> Fewer refills</div>
+    <div class="band-item"><span class="glyph">◆</span> Rodent resistant</div>
+    <div class="band-item"><span class="glyph">◆</span> Stainless, not plastic</div>
+    <div class="band-item"><span class="glyph">◆</span> Dishwasher-safe trays</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="why">
+  <div class="section-head">
+    <div class="mono label">01 — The problem</div>
+    <h2>Every open trough<br>is a <em>slow leak</em>.</h2>
+  </div>
+
+  <div class="problem-grid">
+    <div class="problem-card old">
+      <div>
+        <div class="mono tag">Legacy feeders</div>
+        <h3>Buckets, troughs &amp; hanging tins.</h3>
+        <ul>
+          <li>Feed scattered onto bedding by perching birds</li>
+          <li>Open tops invite rodents, wild birds &amp; damp</li>
+          <li>Manual top-ups twice a day — rain or not</li>
+          <li>No way to meter dose to flock size</li>
+        </ul>
+      </div>
+      <div>
+        <div class="stat-big">30%</div>
+        <div class="stat-lbl">of feed wasted in a typical backyard coop</div>
+      </div>
+    </div>
+    <div class="problem-card new">
+      <div>
+        <div class="mono tag">FlockFeeder Model 01</div>
+        <h3>Sealed hopper. Metered flow. Six trays.</h3>
+        <ul>
+          <li>Transparent column — check supply at a glance</li>
+          <li>Spring-loaded dose knob: 8 settings, no tools</li>
+          <li>Elevated trays keep bedding &amp; droppings out</li>
+          <li>Hinged lid + skirt geometry deter pests</li>
+        </ul>
+      </div>
+      <div>
+        <div class="stat-big">&lt;4%</div>
+        <div class="stat-lbl">feed loss in field pilots across 42 coops</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS / ANATOMY -->
+<section id="how">
+  <div class="section-head">
+    <div class="mono label">02 — Anatomy</div>
+    <h2>Nine parts,<br><em>one quiet loop</em>.</h2>
+  </div>
+
+  <div class="anatomy">
+    <div class="anatomy-svg-wrap">
+      <img class="product-img" src="assets/flockfeeder.png" alt="FlockFeeder Model 01 — full product view showing hinged lid, transparent hopper, flow mechanism, stainless feeding bowls and red base" />
+    
+    </div>
+
+    <!-- callout labels -->
+    <div class="anatomy-label" style="top:6%; left:4%;">
+      <span class="no">01</span>
+      <div><div class="nm">Hinged lid</div><div class="sub">Flips open, stays open</div></div>
+    </div>
+    <div class="anatomy-label" style="top:18%; left:4%;">
+      <span class="no">02</span>
+      <div><div class="nm">Stainless collar</div><div class="sub">Lid seat + hinge anchor</div></div>
+    </div>
+    <div class="anatomy-label" style="top:33%; left:4%;">
+      <span class="no">04</span>
+      <div><div class="nm">Transparent hopper</div><div class="sub">12 L · glass-clear PETG</div></div>
+    </div>
+    <div class="anatomy-label" style="top:72%; left:4%;">
+      <span class="no">07</span>
+      <div><div class="nm">Feeding bowls ×10</div><div class="sub">304 SS, removable</div></div>
+    </div>
+    <div class="anatomy-label" style="top:86%; left:4%;">
+      <span class="no">08</span>
+      <div><div class="nm">Red base ring</div><div class="sub">Weighted, anti-tip</div></div>
+    </div>
+
+    <div class="anatomy-label" style="top:10%; right:4%;">
+      <span class="no">03</span>
+      <div><div class="nm">Top red disk</div><div class="sub">Hopper housing</div></div>
+    </div>
+    <div class="anatomy-label" style="top:46%; right:4%;">
+      <span class="no">05</span>
+      <div><div class="nm">Stainless flow ring</div><div class="sub">Meters feed release</div></div>
+    </div>
+    <div class="anatomy-label" style="top:58%; right:4%;">
+      <span class="no">06</span>
+      <div><div class="nm">Central column</div><div class="sub">Drops feed to trays</div></div>
+    </div>
+    <div class="anatomy-label" style="top:76%; right:4%;">
+      <span class="no">09</span>
+      <div><div class="nm">Compression spring</div><div class="sub">External · 8-step dose</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-head">
+    <div class="mono label">03 — Built-in</div>
+    <h2>What it <em>actually does</em><br>for your flock.</h2>
+  </div>
+
+  <div class="feat-grid">
+    <div class="feat">
+      <div class="feat-ico">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h12v18H6z"/><path d="M6 9h12M6 15h12"/></svg>
+      </div>
+      <h4>See the feed line at a glance</h4>
+      <p>The marine-grade transparent hopper shows level in five-liter bands so refills happen on schedule — not by guesswork.</p>
+      <div class="feat-num mono">01 / Visibility</div>
+    </div>
+    <div class="feat">
+      <div class="feat-ico">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <h4>Dose control by knob</h4>
+      <p>A sprung adjustment knob selects one of eight flow steps — from 20g chicks to 180g adults — in seconds, no tools, no re-plumbing.</p>
+      <div class="feat-num mono">02 / Metering</div>
+    </div>
+    <div class="feat">
+      <div class="feat-ico">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12l4-4 4 4 4-4 4 4"/><path d="M4 18h16"/></svg>
+      </div>
+      <h4>Six birds, zero elbows</h4>
+      <p>A radial tray splits the column into six protected feeding stations — birds eat simultaneously without jostling or tipping.</p>
+      <div class="feat-num mono">03 / Access</div>
+    </div>
+    <div class="feat">
+      <div class="feat-ico">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4"/><path d="M12 11v10"/></svg>
+      </div>
+      <h4>Stainless everything it matters</h4>
+      <p>304-grade stainless trays, hinge and central shaft. Hose them, dishwash them, forget them. The parts that touch feed don't flake.</p>
+      <div class="feat-num mono">04 / Hygiene</div>
+    </div>
+    <div class="feat">
+      <div class="feat-ico">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="5"/></svg>
+      </div>
+      <h4>Weighted red base</h4>
+      <p>The low-slung base brings the center of gravity to 90 mm — a 3 kg bird flapping its way to the tray won't knock it over.</p>
+      <div class="feat-num mono">05 / Stability</div>
+    </div>
+    <div class="feat">
+      <div class="feat-ico">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="18" height="12" rx="1"/><path d="M7 7V5a5 5 0 0110 0v2"/></svg>
+      </div>
+      <h4>Pest-deterrent geometry</h4>
+      <p>A hinged lid plus a skirted base with a 14 mm overhang blocks rodents, wild birds, and curious cats from finding a way in.</p>
+      <div class="feat-num mono">06 / Protection</div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section id="specs">
+  <div class="section-head">
+    <div class="mono label">04 — Specifications</div>
+    <h2>The <em>numbers</em>,<br>for the record.</h2>
+  </div>
+
+  <div class="spec-wrap">
+    <div class="spec-visual">
+      <!-- orthographic 3-view -->
+      <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <!-- front view -->
+        <g stroke="#F2EFE8" stroke-width="1.2" opacity="0.9">
+          <rect x="160" y="40" width="80" height="10"/>
+          <rect x="150" y="50" width="100" height="180" fill="none"/>
+          <line x1="200" y1="50" x2="200" y2="230" stroke="#F2EFE8" opacity="0.3"/>
+          <path d="M 150 230 L 130 260 L 270 260 L 250 230 Z"/>
+          <rect x="110" y="260" width="180" height="12"/>
+          <path d="M 110 272 Q 110 300 200 308 Q 290 300 290 272 Z"/>
+          <circle cx="200" cy="330" r="12"/>
+        </g>
+
+        <!-- top view (small) -->
+        <g transform="translate(70,380)" stroke="#F2EFE8" stroke-width="1" opacity="0.9">
+          <circle cx="0" cy="0" r="55"/>
+          <circle cx="0" cy="0" r="40" opacity="0.5"/>
+          <circle cx="0" cy="0" r="8"/>
+          <line x1="-55" y1="0" x2="55" y2="0" opacity="0.3"/>
+          <line x1="0" y1="-55" x2="0" y2="55" opacity="0.3"/>
+        </g>
+
+        <!-- side view (small) -->
+        <g transform="translate(260,380)" stroke="#F2EFE8" stroke-width="1" opacity="0.9">
+          <rect x="-20" y="-60" width="40" height="90" fill="none"/>
+          <path d="M -30 30 L -40 50 L 40 50 L 30 30 Z"/>
+          <path d="M -50 50 Q -50 70 0 75 Q 50 70 50 50 Z"/>
+        </g>
+
+        <!-- dim lines -->
+        <g stroke="#F2EFE8" stroke-width="0.5" opacity="0.5">
+          <line x1="80" y1="50" x2="80" y2="345"/>
+          <line x1="76" y1="50" x2="84" y2="50"/>
+          <line x1="76" y1="345" x2="84" y2="345"/>
+        </g>
+        <text x="64" y="200" fill="#F2EFE8" opacity="0.7" font-family="JetBrains Mono" font-size="9" transform="rotate(-90 64 200)">580 mm</text>
+
+        <text x="20" y="470" fill="#F2EFE8" opacity="0.5" font-family="JetBrains Mono" font-size="9">PLAN</text>
+        <text x="240" y="470" fill="#F2EFE8" opacity="0.5" font-family="JetBrains Mono" font-size="9">SIDE</text>
+        <text x="140" y="20" fill="#F2EFE8" opacity="0.5" font-family="JetBrains Mono" font-size="9">ELEVATION</text>
+      </svg>
+      <div class="cap mono">Model 01 / technical drawing — three orthographic views</div>
+    </div>
+
+    <div>
+      <table class="specs">
+        <tr><td class="k">Height</td><td class="v">580 mm <div class="note">includes lid handle + adjustment knob</div></td></tr>
+        <tr><td class="k">Base diameter</td><td class="v">460 mm</td></tr>
+        <tr><td class="k">Hopper capacity</td><td class="v">12 L <div class="note">≈ 8.4 kg pelleted layer feed</div></td></tr>
+        <tr><td class="k">Dose range</td><td class="v">20 g – 180 g per bird / day</td></tr>
+        <tr><td class="k">Dose steps</td><td class="v">8 · selected via base knob</td></tr>
+        <tr><td class="k">Feeding stations</td><td class="v">6 · radial · 60° apart</td></tr>
+        <tr><td class="k">Materials</td><td class="v">PETG hopper · 304 stainless trays, shaft, hinge · ABS base</td></tr>
+        <tr><td class="k">Weight (empty)</td><td class="v">3.2 kg</td></tr>
+        <tr><td class="k">Cleaning</td><td class="v">Tool-free disassembly · dishwasher-safe trays</td></tr>
+        <tr><td class="k">Flock size</td><td class="v">6 – 14 birds <div class="note">4 day autonomy at mid-dose setting</div></td></tr>
+        <tr><td class="k">Warranty</td><td class="v">5 years on metal parts · 2 years on plastics</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section id="story">
+  <div class="quote-block">
+    <div class="q-bg">"</div>
+    <blockquote>
+      "Replaced three hanging feeders with one FlockFeeder.
+      Refills <em>dropped from twice a day to twice a week</em>,
+      and the coop floor is finally clean."
+    </blockquote>
+    <div class="quote-meta">
+      <div class="avatar"></div>
+      <div>
+        <div class="name">Nandini R.</div>
+        <div class="role">Pilot owner · 11-bird mixed flock · Nashik, IN</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="order">
+  <div class="mono label" style="color:var(--muted); margin-bottom:24px;">05 — Model 01 launch</div>
+  <h2>Less feed on the floor.<br><em>More eggs in the basket.</em></h2>
+  <p>Model 01 ships in Q2 2026. Reserve yours for ₹4,800 — refundable, limited to the first 500 units.</p>
+  <div class="cta-row">
+    <a href="#" class="btn primary">Reserve Model 01 →</a>
+    <a href="#" class="btn ghost">Download spec sheet (PDF)</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="huge-logo">Flock<em>Feeder</em></div>
+
+  <div class="footer-grid">
+    <div>
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <span>FlockFeeder</span>
+      </div>
+      <p class="pitch">Precision feeding hardware for small and mid-sized poultry operations. Designed in Pune. Built to last a decade of coop mornings.</p>
+    </div>
+    <div>
+      <h5>Product</h5>
+      <ul>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#specs">Specifications</a></li>
+        <li><a href="#order">Reserve</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Support</h5>
+      <ul>
+        <li><a href="#">Assembly guide</a></li>
+        <li><a href="#">Cleaning &amp; maintenance</a></li>
+        <li><a href="#">Replacement parts</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#">Story</a></li>
+        <li><a href="#">Field pilots</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Stockists</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-meta">
+    <div>© 2026 FlockFeeder Works · Pune, India</div>
+    <div>Designed by Sairaj Walake · Model 01, rev. 4</div>
+  </div>
+</footer>
+
+</body>
+</html>
